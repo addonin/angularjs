@@ -1,0 +1,21 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Description</th>
+			<th>Done</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>		
+		<!-- <tr ng-repeat="item in todo.items | filter: {done: false} | orderBy:'action'" ng-class-odd="'odd'" ng-class-even="'even'"> -->
+		<tr ng-repeat="item in todo.items | checkedItems: showComplete | orderBy:'action'" ng-class-odd="'odd'" ng-class-even="'even'">
+			<td>{{$index + 1}}</td>
+			<td>{{item.action}}</td>
+			<td>
+				<input type="checkbox" ng-model="item.done">
+			</td>
+			<td>{{item.done}}</td>						
+		</tr>			
+	</tbody>
+</table>

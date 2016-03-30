@@ -6,23 +6,31 @@
 	<link href="vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="vendor/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
 	<link href="css/main.css" rel="stylesheet">
-
+	<link href="css/ng-cloak.css" rel="stylesheet">
 </head>
-<body ng-controller="Todo">
+
+<body ng-controller="Todo" ng-cloak>
+
 	<div class="container">
+
 		<div class="page-header">
-			<h1><img class="photo" src="{{todo.userPhoto}}">
+			<h1><img class="photo" ng-src="{{todo.userPhoto}}">
 				{{::todo.user}}'s To Do List
+				<span class="label label-default" ng-class="warningLevel(todo.items)" ng-hide="incompleteCount(todo.items) === 0">
+					{{incompleteCount(todo.items)}}
+				</span>
 			</h1>
 		</div>
+
 		<div class="panel">
+
 			<form novalidate name="newTask">
 				<div class="form-group">
 					<label for="action">Action:</label>
 					<div class="input-group">
-						<input id="action" name="action" class="form-control" />
+						<input id="action" name="action" class="form-control" ng-model="newItem.action"/>
 						<span class="input-group-btn">
-							<button class="btn btn-default">Add</button>
+							<button class="btn btn-default" ng-click="addNewItem(todo.items, newItem)">Add</button>
 						</span>
 					</div>
 				</div>
@@ -31,22 +39,31 @@
 			<table class="table table-striped">
 				<thead>
 					<tr>
+						<th>#</th>
 						<th>Description</th>
 						<th>Done</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>		
-					<tr ng-repeat="item in todo.items">
+					<!-- <tr ng-repeat="item in todo.items | filter: {done: false} | orderBy:'action'" ng-class-odd="'odd'" ng-class-even="'even'"> -->
+					<tr ng-repeat="item in todo.items | checkedItems: showComplete | orderBy:'action'" ng-class-odd="'odd'" ng-class-even="'even'">
+						<td>{{$index + 1}}</td>
 						<td>{{item.action}}</td>
-						<td>{{item.done}}</td>
+						<td>
+							<input type="checkbox" ng-model="item.done">
+						</td>
+						<td>{{item.done}}</td>						
 					</tr>			
-					<!-- <tr><td>Estimate...</td><td>No</td></tr>
-					<tr><td>Create...</td><td>No</td></tr>
-					<tr><td>Edit...</td><td>Yes</td></tr>
-					<tr><td>Delete...</td><td>No</td></tr> -->
 				</tbody>
 			</table>
+
+			<label>
+				<input type="checkbox" ng-model="showComplete">Show complete
+			</label>
+
 		</div>
+
 	</div>
 
 	<script src="vendor/angular/angular.min.js"></script>
